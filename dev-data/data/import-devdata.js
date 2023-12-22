@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 const Tour = require('../../models/tourModel');
+const User = require('./../../models/userModal');
+const Review = require('./../../models/reviewModel');
 
 dotenv.config({ path: './config.env' });
 
@@ -24,13 +26,21 @@ mongoose
     console.log('connect');
   });
 
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
+const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
+const reviews = JSON.parse(
+  fs.readFileSync(
+    `${__dirname}/review
+  .json`,
+    'utf-8'
+  )
 );
 
 const importData = async () => {
   try {
     await Tour.create(tours);
+    await User.create(users);
+    await Review.create(reviews);
     console.log('Data successfully loaded');
   } catch (err) {
     console.log(err, 'import');
