@@ -35,7 +35,8 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       defauilt: 4.5,
       min: [1, 'Rating must be above one'],
-      max: [5, 'Rating must be below five']
+      max: [5, 'Rating must be below five'],
+      set: val => Math.round(val * 10) / 10
     },
     ratingsQuantity: {
       type: Number,
@@ -106,6 +107,10 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+tourSchema.index({ startLocation: '2dspfere' });
+
 tourSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'guides',
@@ -139,10 +144,10 @@ tourSchema.post(/^find/, function(docs, next) {
   next();
 });
 
-tourSchema.pre('aggregate', function(next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  next();
-});
+// tourSchema.pre('aggregate', function(next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+//   next();
+// });
 
 tourSchema.pre('save', async function(next) {
   const guidesPromises = this.guides.map(async id => await User.findById(id));

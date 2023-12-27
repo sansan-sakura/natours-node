@@ -4,11 +4,12 @@ const {
   postTour,
   getTour,
   deleteTour,
-  checkBody,
+  getToursWithin,
   aliasTopTours,
   getTourStats,
   getMonthlyPlan,
-  updateTour
+  updateTour,
+  getDistances
 } = require('./../controllers/tourController');
 const authController = require('./../controllers/authController');
 const reviewController = require('./../controllers/reviewController');
@@ -27,6 +28,12 @@ router
     authController.restrictTo('admin', 'lead-giude', 'guide'),
     getMonthlyPlan
   );
+
+router
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(getToursWithin);
+
+router.route('/distance/:latlng/unit/:unit').get(getDistances);
 
 router
   .route('/')
