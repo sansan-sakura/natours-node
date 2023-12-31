@@ -9,10 +9,12 @@ const {
   getTourStats,
   getMonthlyPlan,
   updateTour,
-  getDistances
+  getDistances,
+  resizeTourImages
 } = require('./../controllers/tourController');
 const authController = require('./../controllers/authController');
 const reviewController = require('./../controllers/reviewController');
+const { uploadPhoto } = require('../controllers/userController');
 
 const router = express.Router();
 
@@ -50,6 +52,8 @@ router
   .patch(
     authController.protect,
     authController.restrictTo('admin', 'lead-giud'),
+    uploadPhoto,
+    resizeTourImages,
     updateTour
   )
   .delete(
